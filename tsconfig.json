@@ -1,0 +1,13 @@
+// tsconfig.json (The root file)
+{
+  "files": [],
+  "compilerOptions": { // <-- ADD THIS ENTIRE OBJECT
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}
