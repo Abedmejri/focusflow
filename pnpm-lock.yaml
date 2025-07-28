@@ -47,9 +47,6 @@ importers:
       '@supabase/supabase-js':
         specifier: ^2.52.1
         version: 2.52.1
-      '@types/recharts':
-        specifier: ^2.0.1
-        version: 2.0.1(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react-is@19.1.0)(react@19.1.0)(redux@5.0.1)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -95,6 +92,9 @@ importers:
       tailwind-merge:
         specifier: ^3.3.1
         version: 3.3.1
+      vite:
+        specifier: ^7.0.6
+        version: 7.0.6(@types/node@24.1.0)(jiti@1.21.7)(yaml@2.8.0)
       zod:
         specifier: ^4.0.10
         version: 4.0.10
@@ -153,9 +153,6 @@ importers:
       typescript-eslint:
         specifier: ^8.35.1
         version: 8.38.0(eslint@9.32.0(jiti@1.21.7))(typescript@5.8.3)
-      vite:
-        specifier: ^7.0.4
-        version: 7.0.6(@types/node@24.1.0)(jiti@1.21.7)(yaml@2.8.0)
 
 packages:
 
@@ -1153,10 +1150,6 @@ packages:
 
   '@types/react@19.1.8':
     resolution: {integrity: sha512-AwAfQ2Wa5bCx9WP8nZL2uMZWod7J7/JSplxbTmBQ5ms6QpqNYm672H0Vu9ZVKVngQ+ii4R/byguVEUZQyeg44g==}
-
-  '@types/recharts@2.0.1':
-    resolution: {integrity: sha512-/cFs7oiafzByUwBSWA1IzE6FW+ppPwQAWsDTadSgVOwzveY9MESpyLHyyHY0SfPPKLW4+4qVNYHPXd0rFiC8vg==}
-    deprecated: This is a stub types definition. recharts provides its own type definitions, so you do not need this installed.
 
   '@types/unist@2.0.11':
     resolution: {integrity: sha512-CmBKiL6NNo/OqgmMn95Fk9Whlp2mtvIv+KNpQKN2F4SjvrEesubTRWGYSg+BnWZOnlCaSTU1sMpsBOzgbYhnsA==}
@@ -3590,16 +3583,6 @@ snapshots:
   '@types/react@19.1.8':
     dependencies:
       csstype: 3.1.3
-
-  '@types/recharts@2.0.1(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react-is@19.1.0)(react@19.1.0)(redux@5.0.1)':
-    dependencies:
-      recharts: 3.1.0(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react-is@19.1.0)(react@19.1.0)(redux@5.0.1)
-    transitivePeerDependencies:
-      - '@types/react'
-      - react
-      - react-dom
-      - react-is
-      - redux
 
   '@types/unist@2.0.11': {}
 
