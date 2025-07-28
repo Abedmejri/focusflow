@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import * as api from '../services/api';
+
 import { useDataStore } from '../stores/useDataStore';
 import FocusTimer from './FocusTimer';
 

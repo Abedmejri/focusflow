@@ -85,3 +85,4 @@ dist-ssr
 
 # Supabase auto-generated folder
 supabase/.temp/
+.vercel

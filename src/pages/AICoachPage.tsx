@@ -13,7 +13,7 @@ import sageAnimation from '../../public/Nostradamus.json';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader2, Moon, Sparkles, Send } from 'lucide-react';
-import { Card } from '@/components/ui/card';
+
 
 // We no longer need the message list state in the same way.
 // We'll track the AI's current message and the overall state.
