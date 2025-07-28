@@ -18,10 +18,11 @@ import { cn } from '@/lib/utils';
 
 type TimerMode = 'pomodoro' | 'short_break' | 'long_break';
 
+// --- FIX: Use z.number() instead of z.coerce.number() ---
 const settingsSchema = z.object({
-  pomodoro: z.coerce.number().min(1, "Must be at least 1 minute.").max(120),
-  shortBreak: z.coerce.number().min(1, "Must be at least 1 minute.").max(30),
-  longBreak: z.coerce.number().min(1, "Must be at least 1 minute.").max(60),
+  pomodoro: z.number().min(1, "Must be at least 1 minute.").max(120),
+  shortBreak: z.number().min(1, "Must be at least 1 minute.").max(30),
+  longBreak: z.number().min(1, "Must be at least 1 minute.").max(60),
 });
 
 const FocusTimer: React.FC<{ tasks: api.Task[] }> = ({ tasks }) => {
@@ -112,13 +113,11 @@ const FocusTimer: React.FC<{ tasks: api.Task[] }> = ({ tasks }) => {
     }, []);
 
     useEffect(() => {
-        // Play ambient sound only when the popover is open, the timer is active, and not muted
         if (isActive && !isMuted && isPopoverOpen) {
             audioRef.current?.play().catch(e => console.error("Audio play error:", e));
         } else {
             audioRef.current?.pause();
         }
-        // Cleanup function to pause sound when component unmounts
         return () => { audioRef.current?.pause(); };
     }, [isActive, isMuted, isPopoverOpen]);
 
@@ -146,45 +145,29 @@ const FocusTimer: React.FC<{ tasks: api.Task[] }> = ({ tasks }) => {
                                 <Settings className="h-4 w-4" />
                             </Button>
                         </div>
-                        
                         <div className="relative my-4 flex items-center justify-center">
                             <div className="h-48 w-48">
                                 <CircularProgressbar
                                     value={progress}
                                     text={`${minutes}:${seconds}`}
                                     strokeWidth={5}
-                                    styles={buildStyles({
-                                        textColor: 'hsl(var(--foreground))',
-                                        pathColor: 'hsl(var(--primary))',
-                                        trailColor: 'hsl(var(--muted))',
-                                        textSize: '22px',
-                                        pathTransitionDuration: 0.5,
-                                    })}
+                                    styles={buildStyles({ textColor: 'hsl(var(--foreground))', pathColor: 'hsl(var(--primary))', trailColor: 'hsl(var(--muted))', textSize: '22px', pathTransitionDuration: 0.5 })}
                                 />
                             </div>
                         </div>
-
                         <div className="grid grid-cols-3 gap-1 rounded-md bg-muted p-1">
                             <Button size="sm" variant={mode === 'pomodoro' ? 'secondary' : 'ghost'} onClick={() => switchMode('pomodoro')}>Focus</Button>
                             <Button size="sm" variant={mode === 'short_break' ? 'secondary' : 'ghost'} onClick={() => switchMode('short_break')}>Short</Button>
                             <Button size="sm" variant={mode === 'long_break' ? 'secondary' : 'ghost'} onClick={() => switchMode('long_break')}>Long</Button>
                         </div>
-
                         <Select onValueChange={setSelectedTaskId} value={selectedTaskId} disabled={isActive}>
                             <SelectTrigger><SelectValue placeholder="Link to a quest..." /></SelectTrigger>
                             <SelectContent>{pendingTasks.map(task => <SelectItem key={task.id} value={String(task.id)}>{task.content}</SelectItem>)}</SelectContent>
                         </Select>
-
                         <div className="flex justify-center items-center gap-6 mt-2">
-                            <Button variant="ghost" size="icon" onClick={() => setIsMuted(!isMuted)}>
-                                {isMuted ? <VolumeX className="h-5 w-5"/> : <Volume2 className="h-5 w-5"/>}
-                            </Button>
-                            <Button size="lg" className="h-16 w-16 rounded-full" onClick={() => setIsActive(!isActive)}>
-                                {isActive ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
-                            </Button>
-                            <Button variant="ghost" size="icon" onClick={() => switchMode(mode)} disabled={isActive}>
-                                <RotateCcw className="h-5 w-5"/>
-                            </Button>
+                            <Button variant="ghost" size="icon" onClick={() => setIsMuted(!isMuted)}>{isMuted ? <VolumeX className="h-5 w-5"/> : <Volume2 className="h-5 w-5"/>}</Button>
+                            <Button size="lg" className="h-16 w-16 rounded-full" onClick={() => setIsActive(!isActive)}>{isActive ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}</Button>
+                            <Button variant="ghost" size="icon" onClick={() => switchMode(mode)} disabled={isActive}><RotateCcw className="h-5 w-5"/></Button>
                         </div>
                     </div>
                 </PopoverContent>
@@ -198,9 +181,10 @@ const FocusTimer: React.FC<{ tasks: api.Task[] }> = ({ tasks }) => {
                     </DialogHeader>
                     <Form {...settingsForm}>
                         <form onSubmit={settingsForm.handleSubmit(onSaveSettings)} className="space-y-4 pt-4">
-                            <FormField control={settingsForm.control} name="pomodoro" render={({ field }) => ( <FormItem><FormLabel>Focus (minutes)</FormLabel><FormControl><Input type="number" {...field}/></FormControl><FormMessage /></FormItem> )}/>
-                            <FormField control={settingsForm.control} name="shortBreak" render={({ field }) => ( <FormItem><FormLabel>Short Break (minutes)</FormLabel><FormControl><Input type="number" {...field}/></FormControl><FormMessage /></FormItem> )}/>
-                            <FormField control={settingsForm.control} name="longBreak" render={({ field }) => ( <FormItem><FormLabel>Long Break (minutes)</FormLabel><FormControl><Input type="number" {...field}/></FormControl><FormMessage /></FormItem> )}/>
+                            {/* --- FIX: Added parseInt onChange handler --- */}
+                            <FormField control={settingsForm.control} name="pomodoro" render={({ field }) => ( <FormItem><FormLabel>Focus (minutes)</FormLabel><FormControl><Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} /></FormControl><FormMessage /></FormItem> )}/>
+                            <FormField control={settingsForm.control} name="shortBreak" render={({ field }) => ( <FormItem><FormLabel>Short Break (minutes)</FormLabel><FormControl><Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)}/></FormControl><FormMessage /></FormItem> )}/>
+                            <FormField control={settingsForm.control} name="longBreak" render={({ field }) => ( <FormItem><FormLabel>Long Break (minutes)</FormLabel><FormControl><Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)}/></FormControl><FormMessage /></FormItem> )}/>
                             <DialogFooter><Button type="submit">Save Settings</Button></DialogFooter>
                         </form>
                     </Form>
